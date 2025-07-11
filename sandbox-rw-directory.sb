@@ -1,0 +1,27 @@
+(version 1)
+(deny default)
+; Allow reading anything (needed for most CLI work)
+(allow file-read*)
+; Full access to current directory and subfolder
+(allow file-write* (subpath "/Users/jreback/Projects/frameworx"))
+; Common dev dirs
+(allow file-write* (subpath "/private/tmp"))
+(allow file-write* (subpath "/tmp"))
+(allow file-write* (subpath "/Users/jreback/Projects/frameworx/.gitconfig"))
+(allow file-write* (subpath "/Users/jreback/Projects/frameworx/dd/.ssh"))
+(allow file-write* (subpath "/Users/jreback/Projects/frameworx/dd/.gnupg"))
+(allow file-write* (subpath "/Users/jreback/Projects/frameworx/dd/.npm"))
+(allow file-write* (subpath "/Users/jreback/Projects/frameworx//.cache"))
+
+; Allow running binaries and spawning child processes
+(allow process-exec)
+(allow process-fork)
+
+; Needed for git and CLI tools
+(allow file-write* (subpath "/Users/jreback/Projects/frameworx/dd/.git-credential-cache"))
+(allow file-write* (subpath "/Users/jreback/Projects/frameworx/dd/.config"))
+(allow file-write* (literal "/dev/null"))
+(allow file-write* (literal "/dev/tty"))
+(allow file-write* (literal "/dev/dtracehelper"))
+(allow sysctl*)
+(allow iokit*)
