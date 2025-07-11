@@ -15,7 +15,6 @@
 
 ; Allow running binaries and spawning child processes
 (allow process-exec)
-(allow process-fork)
 
 ; Needed for git and CLI tools
 (allow file-write* (subpath "/Users/jreback/Projects/frameworx/dd/.git-credential-cache"))
