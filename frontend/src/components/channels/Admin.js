@@ -13,6 +13,28 @@ const initialChannels = [
   'Admin'
 ];
 
+
+// LLM/Provider admin settings configuration
+const LLM_FIELDS = [
+  // Provider select
+  { name: 'LLM_PROVIDER', label: 'Provider', type: 'select',
+    options: [
+      { value: 'openai', label: 'OpenAI' },
+      { value: 'google', label: 'Google Cloud Vision' },
+      { value: 'deepseek', label: 'DeepSeek' },
+    ] },
+  // OpenAI
+  { name: 'OPENAI_API_KEY', label: 'OpenAI API Key', type: 'password' },
+  { name: 'OPENAI_API_MODEL', label: 'OpenAI Model (e.g. gpt-4o)', type: 'text' },
+  // Google
+  { name: 'GOOGLE_API_KEY', label: 'Google Vision API Key', type: 'password' },
+  { name: 'GOOGLE_VISION_REGION', label: 'Google Region', type: 'text' },
+  // DeepSeek
+  { name: 'DEEPSEEK_API_KEY', label: 'DeepSeek API Key', type: 'password' },
+  // Vector toggle
+  { name: 'EMBEDDING_ENABLE', label: 'Enable Embeddings/Vector DB', type: 'toggle'},
+];
+
 export default function Admin() {
   // Auth state
   const [token, setToken] = useState(localStorage.getItem('admintk')||'');
@@ -20,9 +42,13 @@ export default function Admin() {
   const [loginErr, setLoginErr] = useState('');
   const [users, setUsers] = useState([]);
   const [channels, setChannels] = useState(() => {
-      // Demo: could persist to backend as needed
       return JSON.parse(localStorage.getItem('channelsEnabled') || 'null') || initialChannels.map(c => ({name:c, enabled:true}));
   });
+  // LLM/Provider state
+  const [llmConfig, setLlmConfig] = useState({});
+  const [llmEdit, setLlmEdit] = useState({});
+  const [llmEditOpen, setLlmEditOpen] = useState(false);
+  const [llmSaveMsg, setLlmSaveMsg] = useState('');
 
   // Auth helpers
   async function login(username, password) {
@@ -142,6 +168,7 @@ export default function Admin() {
 
       {renderUserAdmin()}
       {renderChannelSettings()}
+      {renderLLMConfigUi()}
       <div style={{marginTop:12,padding:'9px 12px',border:'1px solid #ccc',borderRadius:9}}>
         <b>Channel Setup and Integration</b>
         <div style={{fontSize:"1.05em",margin:"5px 0 0 0"}}>
@@ -156,4 +183,84 @@ export default function Admin() {
       <div style={{marginTop:14, color:'#aaa'}}>For customization, see <b>Admin.js</b> and <b>api/auth.js</b>. Ready for production adaptation!</div>
     </section>
   );
+  // Fetch model/api config for admin
+  async function fetchLLMConfig() {
+    if (!token) return;
+    let resp = await apiFetch('/api/admin/env', { headers: { Authorization: 'Bearer '+token } });
+    setLlmConfig(resp.env);
+    setLlmEdit({});
+  }
+  useEffect(() => { if (token) fetchLLMConfig(); }, [token]);
+
+  async function saveLLMConfig(e) {
+    e.preventDefault();
+    setLlmSaveMsg('');
+    let body = {};
+    LLM_FIELDS.forEach(f => { if (llmEdit[f.name] && llmEdit[f.name].trim()!=='') body[f.name]=llmEdit[f.name].trim(); });
+    if (!Object.keys(body).length) { setLlmSaveMsg('No changes.'); return; }
+    await apiFetch('/api/admin/env', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', Authorization: 'Bearer '+token },
+      body: JSON.stringify(body),
+    });
+    setLlmSaveMsg('Updated successfully. Changes take effect next server restart.');
+    setLlmEdit({});
+    fetchLLMConfig();
+  }
+  function renderLLMConfigUi() {
+    if (!llmConfig) return null;
+    return (
+      <div style={{border:'1px solid #444',borderRadius:8,padding:14,marginTop:18,maxWidth:480}}>
+        <h3 style={{margin:0}}>Language Model & Provider Settings</h3>
+        <div style={{fontSize:'1em',color:'#aaa',marginTop:2,marginBottom:13}}>
+          Select your default provider (OpenAI, Google, DeepSeek), add API keys, and (optionally) enable vector retrieval/RAG.
+        </div>
+        {llmSaveMsg && <div style={{color:'green',marginBottom:9}}>{llmSaveMsg}</div>}
+        <form onSubmit={saveLLMConfig}>
+        {LLM_FIELDS.map(field => (
+          <div key={field.name} style={{margin:'8px 0'}}>
+            <label style={{fontWeight:500,marginRight:15}}>{field.label}: </label>
+            {field.type==="select" ? (
+              <select
+                value={llmEdit[field.name] !== undefined ? llmEdit[field.name] : (llmConfig[field.name]||'openai')}
+                onChange={e=>setLlmEdit(s=>({...s,[field.name]:e.target.value}))}
+                style={{width:200}}>
+                {field.options.map(opt=>(<option value={opt.value} key={opt.value}>{opt.label}</option>))}
+              </select>
+            ) : field.type==="toggle" ? (
+              <input type="checkbox"
+                     checked={!!(llmEdit[field.name]!==undefined?
+                       llmEdit[field.name]==='true'||llmEdit[field.name]===true
+                       : (llmConfig[field.name]==='true'||llmConfig[field.name]===true))}
+                     onChange={e=>setLlmEdit(s=>({ ...s, [field.name]:e.target.checked }))} />
+            ) : (
+              llmEditOpen || typeof llmConfig[field.name]==='undefined'
+                ? (<input type={field.type}
+                           value={llmEdit[field.name] !== undefined ? llmEdit[field.name] : (llmConfig[field.name]||'')}
+                           onChange={e=>setLlmEdit(s=>({ ...s, [field.name]:e.target.value }))}
+                           style={{width:field.type==='password'?260:280}} />)
+                : (<span style={{fontFamily:'monospace',marginLeft:12}}>
+                    {field.type==='password'
+                      ? (llmConfig[field.name+'_OBFUSCATED'] || '')
+                      : ((llmConfig[field.name]||'') + '')}
+                  </span>)
+            )}
+          </div>
+        ))}
+        <div style={{margin:'16px 0'}}>
+          {llmEditOpen
+            ? <button type="submit">Save</button>
+            : <button type="button" onClick={()=>setLlmEditOpen(true)}>Edit</button>}
+        </div>
+        </form>
+        <div style={{fontSize:'.98em',color:'#888',marginTop:6}}>
+          <b>Notes:</b> 
+          <ul style={{margin:'5px 20px'}}>
+            <li>Switching provider may require a compatible API key.</li>
+            <li>Vector DB requires an OpenAI API key (or future: Pinecone/Weaviate setup).</li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
 }

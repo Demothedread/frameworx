@@ -5,7 +5,9 @@ const galleryApi = require('./api/gallery');
 const gameApi = require('./api/game');
 const authApi = require('./api/auth');
 const chatbotApi = require('./api/chatbot');
+const uploadAndSortChannel = require('./channels/uploadandsort');
 const { getEnv } = require('./utils/env');
+const adminApi = require('./api/admin');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -27,6 +29,8 @@ app.use('/api/gallery', galleryApi);
 app.use('/api/game', gameApi);
 app.use('/api/auth', authApi);
 app.use('/api/chatbot', chatbotApi);
+app.use('/api/uploadandsort', uploadAndSortChannel);
+app.use('/api/admin', adminApi);
 app.get('/api/env', (req, res) => res.json(getEnv()));
 
 // Centralized error handler for all API errors

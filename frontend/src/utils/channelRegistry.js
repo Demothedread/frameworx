@@ -8,5 +8,6 @@ export const channelList = [
   { key: 'productivity', name: 'Productivity' },
   { key: 'blog', name: 'Blog (CMS)' },
   { key: 'threegame', name: 'Three.js Game' },
-  { key: 'game', name: 'Game (Sample)' }
+  { key: 'uploadandsort', name: 'Upload & Sort' },
+  { key: 'game', name: 'Game (Sample)' },
 ];

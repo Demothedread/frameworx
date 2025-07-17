@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 
 
+
 import Landing from './channels/Landing';
 import Gallery from './channels/Gallery';
 import LiveVideo from './channels/LiveVideo';
 import Productivity from './channels/Productivity';
 import Blog from './channels/Blog';
 import ThreeGame from './channels/ThreeGame';
+import UploadAndSort from './channels/UploadAndSort';
 
 import Admin from './channels/Admin';
 import Game from './channels/Game';
@@ -21,6 +23,7 @@ const CHANNELS = [
   { key: 'productivity', name: 'Productivity', Component: Productivity },
   { key: 'blog', name: 'Blog (CMS)', Component: Blog },
   { key: 'threegame', name: 'Three.js Game', Component: ThreeGame },
+  { key: 'uploadandsort', name: 'Upload & Sort', Component: UploadAndSort },
   { key: 'chatbot', name: 'Chatbot', Component: Chatbot },
   { key: 'game', name: 'Game (Sample)', Component: Game },
   { key: 'admin', name: 'Admin', Component: Admin },
