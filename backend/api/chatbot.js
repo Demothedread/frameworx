@@ -69,10 +69,30 @@ router.post(
       const reply = json.results?.[0]?.generated_text || json.generated_text || 'No response.';
       return res.json({ bot: llamaModel, reply });
     }
-    // Demo legacy profiles
-    if (profile === 'legal') { ... /* unchanged legacy legal demo code */ }
-    if (profile === 'news') { ... /* unchanged legacy news demo */ }
-    if (profile === 'fantasy') { ... /* unchanged legacy fantasy */ }
+    // Demo legacy profiles (stub implementations)
+    if (profile === 'legal') {
+      // Stub: simple legal-style response
+      return res.json({
+        bot: 'Legal Scholar',
+        reply: `As a Legal Scholar, here is my analysis of your prompt: "${prompt}".`
+      });
+    }
+    if (profile === 'news') {
+      // Stub: simple news-style response with dummy source
+      return res.json({
+        bot: 'Newspaper',
+        reply: `News Headline: "${prompt}". More details forthcoming.`,
+        source: [{ title: 'Demo News Source' }]
+      });
+    }
+    if (profile === 'fantasy') {
+      // Stub: creative fantasy-style response
+      const adventure = wrapFantasy(prompt);
+      return res.json({
+        bot: 'Fantasy Freeflow',
+        reply: adventure
+      });
+    }
     // Default: Echo mode for any model/call
     return res.json({ bot: model || 'Default Model', reply: `AI says: ${prompt}` });
   } catch(e) {

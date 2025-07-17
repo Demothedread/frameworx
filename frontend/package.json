@@ -11,4 +11,35 @@
     "build": "react-scripts build"
   },
   "proxy": "http://localhost:4000"
+  },
+  "devDependencies": {
+
+    "react-scripts": "^5.0.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  },
+  "eslintIgnore": [
+    "src/serviceWorker.js",
+    "src/setupTests.js"
+  ]
 }
+// This file is used to manage the frontend dependencies and scripts for the Channel Rolodex application
+// It includes React and React DOM as dependencies, and sets up scripts for starting and building the frontend application.
+// The proxy is set to redirect API calls to the backend server running on localhost:4000
+// The ESLint configuration extends the default React app settings, and specifies browsers for production builds.
+// The `eslintIgnore` field specifies files that should be ignored by ESLint.
+// The `devDependencies` section includes `react-scripts`, which provides scripts and configuration for Create React App.
+// The `private` field is set to true to prevent accidental publishing of the frontend package to
+
+
