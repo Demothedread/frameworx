@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const validateInput = require('../middleware/validateInput');
+const { requireJWT } = require('../middleware/auth');
 const router = express.Router();
 
 // In-memory demo storage: { username, passwordHash, isAdmin }
@@ -39,17 +40,6 @@ router.post('/login', (req, res) => {
 });
 
 // Auth middleware
-function requireJWT(req, res, next) {
-  const hdr = req.headers.authorization;
-  if (!hdr || !hdr.startsWith('Bearer ')) return res.status(401).json({ error: 'No token' });
-  try {
-    req.user = jwt.verify(hdr.slice(7), process.env.JWT_SECRET || 'devsecret');
-    next();
-  } catch {
-    return res.status(401).json({ error: 'JWT error' });
-  }
-}
-
 // Whoami
 router.get('/me', requireJWT, (req, res) => {
   res.json({ user: req.user });
