@@ -1,0 +1,14 @@
+{
+  "entities": {
+    "logger": {
+      "type": "util",
+      "path": "shared/utils/logger.js"
+    },
+    "server": {
+      "type": "core",
+      "path": "backend/core/server.js"
+    }
+  },
+  "relations": [],
+  "notes": "Added logger util and core server module"
+}
