@@ -47,7 +47,8 @@ Channels implemented:
 
 - Landing (Welcome)
 - Gallery (Photo, images served from Express)
-- Game (Demo Highscore)
+- Game (Scoreboard demo)
+  - Submit your name and score to see your entry in the top 10.
 
 ---
 

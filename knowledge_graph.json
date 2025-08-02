@@ -1,0 +1,13 @@
+{
+  "entities": [
+    {"id": "backend_game_api", "type": "module", "desc": "Express router for game endpoints"},
+    {"id": "frontend_game_channel", "type": "component", "desc": "React channel for game scoreboard"}
+  ],
+  "features": [
+    {"id": "scoreboard", "desc": "Submit and list top scores"}
+  ],
+  "relations": [
+    {"from": "frontend_game_channel", "to": "backend_game_api", "type": "fetches"}
+  ],
+  "notes": ["Added in-memory scoreboard with submit and list endpoints."]
+}
