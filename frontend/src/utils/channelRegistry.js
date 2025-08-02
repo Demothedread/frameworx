@@ -5,6 +5,7 @@ export const channelList = [
   { key: 'landing', name: 'Landing' },
   { key: 'gallery', name: 'Image Gallery' },
   { key: 'livevideo', name: 'Live Video' },
+  { key: 'mindmap', name: 'Mind Map' },
   { key: 'productivity', name: 'Productivity' },
   { key: 'blog', name: 'Blog (CMS)' },
   { key: 'threegame', name: 'Three.js Game' },

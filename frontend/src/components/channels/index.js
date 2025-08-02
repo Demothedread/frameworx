@@ -2,6 +2,7 @@
 export { default as Landing } from './Landing';
 export { default as Gallery } from './Gallery';
 export { default as LiveVideo } from './LiveVideo';
+export { default as MindMap } from './MindMap';
 export { default as Productivity } from './Productivity';
 export { default as Blog } from './Blog';
 export { default as ThreeGame } from './ThreeGame';
