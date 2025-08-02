@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 const { getEnv } = require('../utils/env');
-const jwt = require('jsonwebtoken');
+const { requireAdminJWT } = require('../middleware/auth');
 
 // DEMO ONLY: Save/load config in a persistable .env.demo file (edit for prod)
 const ENV_FILE = path.join(__dirname, '../.env.demo');
@@ -15,19 +15,6 @@ const SENSITIVE_KEYS = [
   'DEEPSEEK_API_KEY',
   'EMBEDDING_ENABLE'
 ];
-
-function requireAdminJWT(req, res, next) {
-  const token = req.headers.authorization && req.headers.authorization.replace(/^Bearer\s+/,'');
-  if (!token) return res.status(401).json({ error: 'Missing token' });
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'devsecret');
-    if (!decoded.isAdmin) return res.status(403).json({ error: 'Admin only' });
-    req.user = decoded;
-    next();
-  } catch(e) {
-    return res.status(401).json({ error: 'Invalid token' });
-  }
-}
 
 // GET: Get current env and sensitive config for admin UI
 router.get('/env', requireAdminJWT, (req, res) => {
