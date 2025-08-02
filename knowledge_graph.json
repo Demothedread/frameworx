@@ -1,0 +1,16 @@
+{
+  "entities": {
+    "MindMap": {
+      "type": "frontend-channel",
+      "files": ["frontend/src/components/channels/MindMap.js"],
+      "notes": "3D mind map of personal relationships"
+    }
+  },
+  "relations": [
+    {"from": "ChannelContainer", "to": "MindMap", "type": "imports"}
+  ],
+  "features": {
+    "mind-map": "Visualization of close vs distant connections"
+  },
+  "notes": []
+}

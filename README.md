@@ -48,6 +48,7 @@ Channels implemented:
 - Landing (Welcome)
 - Gallery (Photo, images served from Express)
 - Game (Demo Highscore)
+- Mind Map (3D social graph)
 
 ---
 
