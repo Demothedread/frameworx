@@ -38,6 +38,10 @@ Open `http://localhost:3000` in your browser.
   - Make a new file in `backend/api/` if you want API endpoints.
 - **Shared Utilities:**
   - Put reusable code in `src/utils/` or `backend/utils/`.
+  - Cross-container helpers live under `shared/utils/`.
+- **Core Modules:**
+  - Backend startup code resides in `backend/core/`.
+  - Frontend app shell in `frontend/src/core/`.
 
 **Extension points are commented in the code!* *
 
