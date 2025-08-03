@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import Landing from './channels/Landing';
 import Gallery from './channels/Gallery';
 import LiveVideo from './channels/LiveVideo';
+import MindMap from './channels/MindMap';
 import Productivity from './channels/Productivity';
 import Blog from './channels/Blog';
 import ThreeGame from './channels/ThreeGame';
@@ -20,6 +21,7 @@ const CHANNELS = [
   { key: 'landing', name: 'Landing', Component: Landing },
   { key: 'gallery', name: 'Image Gallery', Component: Gallery },
   { key: 'livevideo', name: 'Live Video', Component: LiveVideo },
+  { key: 'mindmap', name: 'Mind Map', Component: MindMap },
   { key: 'productivity', name: 'Productivity', Component: Productivity },
   { key: 'blog', name: 'Blog (CMS)', Component: Blog },
   { key: 'threegame', name: 'Three.js Game', Component: ThreeGame },
