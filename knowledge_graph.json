@@ -1,28 +1,30 @@
 {
-  "entities": {
-    "MindMap": {
-      "type": "frontend-channel",
-      "files": ["frontend/src/components/channels/MindMap.js"],
-      "notes": "3D mind map of personal relationships"
-  
-        },
-        "relations": [
-          {"from": "ChannelContainer", "to": "MindMap", "type": "imports"}
-        ],
-        "features": {
-          "mind-map": "Visualization of close vs distant connections"
-        },
-        "notes": []
-  }
   "entities": [
+    {"id": "MindMap", "type": "frontend-channel", "files": ["frontend/src/components/channels/MindMap.js"], "notes": "3D mind map of personal relationships"},
     {"id": "backend_game_api", "type": "module", "desc": "Express router for game endpoints"},
-    {"id": "frontend_game_channel", "type": "component", "desc": "React channel for game scoreboard"}
+    {"id": "frontend_game_channel", "type": "component", "desc": "React channel for game scoreboard"},
+    {"id": "frontend_gallery_channel", "type": "component", "files": ["frontend/src/components/channels/Gallery.js"], "desc": "Gallery channel with album tiles and subroutes"},
+    {"id": "gallery_tile_component", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryTile.js"], "desc": "Rhombus album selection tile"},
+    {"id": "gallery_album_sporting_sort", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumSportingSort.js"], "desc": "Sporting Sort album layout"},
+    {"id": "gallery_album_globetrotter", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumGlobetrotter.js"], "desc": "Globetrotter album layout"},
+    {"id": "gallery_album_auteur_monsieur", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumAuteurMonsieur.js"], "desc": "Auteur Monsieur album layout"},
+    {"id": "gallery_album_news_junket", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumNewsJunket.js"], "desc": "News Junket album layout"}
   ],
   "features": [
-    {"id": "scoreboard", "desc": "Submit and list top scores"}
+    {"id": "mind-map", "desc": "Visualization of close vs distant connections"},
+    {"id": "scoreboard", "desc": "Submit and list top scores"},
+    {"id": "gallery-home", "desc": "Animated album selection tiles"},
+    {"id": "album-subroutes", "desc": "Distinct layouts per photo album"}
   ],
   "relations": [
-    {"from": "frontend_game_channel", "to": "backend_game_api", "type": "fetches"}
+    {"from": "ChannelContainer", "to": "MindMap", "type": "imports"},
+    {"from": "frontend_game_channel", "to": "backend_game_api", "type": "fetches"},
+    {"from": "ChannelContainer", "to": "frontend_gallery_channel", "type": "imports"},
+    {"from": "frontend_gallery_channel", "to": "gallery_tile_component", "type": "renders"},
+    {"from": "frontend_gallery_channel", "to": "gallery_album_sporting_sort", "type": "routes"},
+    {"from": "frontend_gallery_channel", "to": "gallery_album_globetrotter", "type": "routes"},
+    {"from": "frontend_gallery_channel", "to": "gallery_album_auteur_monsieur", "type": "routes"},
+    {"from": "frontend_gallery_channel", "to": "gallery_album_news_junket", "type": "routes"}
   ],
-  "notes": ["Added in-memory scoreboard with submit and list endpoints."]
+  "notes": ["Added in-memory scoreboard with submit and list endpoints.", "Added animated gallery home with four themed albums."]
 }
