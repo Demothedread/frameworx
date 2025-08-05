@@ -7,8 +7,18 @@
     "server": {
       "type": "core",
       "path": "backend/core/server.js"
+    },
+    "channelContainer": {
+      "type": "frontend-component",
+      "path": "frontend/src/components/ChannelContainer.js"
+    },
+    "channelThemes": {
+      "type": "frontend-util",
+      "path": "frontend/src/components/channelThemes.js"
     }
   },
-  "relations": [],
-  "notes": "Added logger util and core server module"
+  "relations": [
+    { "from": "channelContainer", "to": "channelThemes", "type": "uses" }
+  ],
+  "notes": "Added logger util and core server module. Added channel theme toggling."
 }
