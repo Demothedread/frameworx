@@ -41,7 +41,18 @@ function ChatbotMenu({
           </label>
           <label style={{display:'block', marginBottom:8}}>
             <b>API Key:</b>{' '}
-            <input type="password" value={apiKey} placeholder={provider==='openai' ? "OpenAI secret key..." : provider==='gemini' ? "Gemini API key..." : "DeepInfra API key..."} onChange={e=>setApiKey(e.target.value)} style={{width:'100%'}} />
+            {/* For production, consider using a secure backend to handle API keys */}
+            <input
+              type="password"
+              value={apiKey}
+              placeholder={provider==='openai' ? "OpenAI secret key..." : provider==='gemini' ? "Gemini API key..." : "DeepInfra API key..."}
+              onChange={e=>setApiKey(e.target.value)}
+              style={{width:'100%'}}
+              autoComplete="off"
+            />
+            <div style={{color:'#c00', fontSize:'0.9em', marginTop:'2px'}}>
+              ⚠️ Never share or store API keys in your browser. Use secure backend storage or environment variables.
+            </div>
           </label>
         </div>
         
@@ -102,7 +113,8 @@ function ChatbotMenu({
 export default function Chatbot() {
   const [prompt, setPrompt] = useState('');
   const [chatlog, setChatlog] = useState([]);
-  const [apiKey, setApiKey] = useState(localStorage.getItem('ai_api_key')||'');
+  // Remove localStorage usage for API keys; use a secure backend or environment variable instead
+  const [apiKey, setApiKey] = useState('');
   const [model, setModel] = useState('gpt-3.5-turbo');
   const [profile, setProfile] = useState('default');
   const [provider, setProvider] = useState('openai');
@@ -118,7 +130,7 @@ export default function Chatbot() {
   const logEnd = useRef();
 
   function remember() {
-    localStorage.setItem('ai_api_key', apiKey || '');
+    // Do not store API keys in localStorage; only store non-sensitive preferences
     localStorage.setItem('openai_vector_store_id', openaiVectorStoreId || '');
     localStorage.setItem('qdrant_collection_name', qdrantCollectionName || '');
     localStorage.setItem('custom_instructions', customInstructions || '');

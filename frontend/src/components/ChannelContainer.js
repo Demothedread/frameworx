@@ -1,32 +1,31 @@
 import React, { useState, useRef } from 'react';
 
-
-
-import Landing from './channels/Landing';
-import Gallery from './channels/Gallery';
-import LiveVideo from './channels/LiveVideo';
-import Productivity from './channels/Productivity';
+import Admin from './channels/Admin';
 import Blog from './channels/Blog';
+import Chatbot from './channels/Chatbot';
+import Gallery from './channels/Gallery';
+import Game from './channels/Game';
+import Landing from './channels/Landing';
+import LiveVideo from './channels/LiveVideo';
+import MindMap from './channels/MindMap';
+import Productivity from './channels/Productivity';
 import ThreeGame from './channels/ThreeGame';
 import UploadAndSort from './channels/UploadAndSort';
 
-import Admin from './channels/Admin';
-import Game from './channels/Game';
-
-// Register your channel cards here!
-import Chatbot from './channels/Chatbot';
+import channelThemes from './channelThemes';
 
 const CHANNELS = [
-  { key: 'landing', name: 'Landing', Component: Landing },
-  { key: 'gallery', name: 'Image Gallery', Component: Gallery },
-  { key: 'livevideo', name: 'Live Video', Component: LiveVideo },
-  { key: 'productivity', name: 'Productivity', Component: Productivity },
+  { key: 'admin', name: 'Admin', Component: Admin },
   { key: 'blog', name: 'Blog (CMS)', Component: Blog },
+  { key: 'chatbot', name: 'Chatbot', Component: Chatbot },
+  { key: 'gallery', name: 'Image Gallery', Component: Gallery },
+  { key: 'game', name: 'Game (Sample)', Component: Game },
+  { key: 'landing', name: 'Landing', Component: Landing },
+  { key: 'livevideo', name: 'Live Video', Component: LiveVideo },
+  { key: 'mindmap', name: 'Mind Map', Component: MindMap },
+  { key: 'productivity', name: 'Productivity', Component: Productivity },
   { key: 'threegame', name: 'Three.js Game', Component: ThreeGame },
   { key: 'uploadandsort', name: 'Upload & Sort', Component: UploadAndSort },
-  { key: 'chatbot', name: 'Chatbot', Component: Chatbot },
-  { key: 'game', name: 'Game (Sample)', Component: Game },
-  { key: 'admin', name: 'Admin', Component: Admin },
 ];
 
 // Animation CSS (TV flip/static effect)
@@ -35,7 +34,7 @@ const tvAnimStyles = `
   position: relative;
   width: 100vw;
   min-height: 360px;
-  background: #141519;
+  background: var(--primary-color, #141519);
   overflow: hidden;
 }
 .tv-channel-inner {
@@ -66,18 +65,24 @@ const tvAnimStyles = `
   gap:2vw; margin: 14px 0 8px 0; font-family:sans-serif; font-weight:bold;
 }
 .tv-nav-btn {
-  padding: 5px 20px; background: #222c36; color: #fff; border-radius: 1em; border:0; font-size:1rem; cursor:pointer;
+  padding: 5px 20px; background: var(--secondary-color, #222c36); color: var(--tertiary-color, #fff);
+  border-radius: 1em; border:0; font-size:1rem; cursor:pointer;
   margin: 0 8px;
   transition:background .2s;
 }
-.tv-nav-btn:hover { background: #5569a1; }
+.tv-nav-btn:hover { background: var(--tertiary-color, #5569a1); color: var(--primary-color, #000); }
 `;
 
-// Intuitive, drop-in: just put your Channel's Component in 'CHANNELS' above
+/**
+ * Container for channel components with global theme toggle.
+ * Applies channel-specific light and dark color schemes via CSS variables.
+ * @returns {JSX.Element} The themed channel container.
+ */
 export default function ChannelContainer() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [animKey, setAnimKey] = useState(0);
   const [flipDir, setFlipDir] = useState(''); // '' | 'fwd' | 'bwd'
+  const [theme, setTheme] = useState('light');
   const animTimeoutRef = useRef();
   const Channel = CHANNELS[activeIdx].Component;
 
@@ -95,16 +100,28 @@ export default function ChannelContainer() {
   const nextChannel = () => flip((activeIdx + 1) % CHANNELS.length, 'fwd');
   const prevChannel = () => flip((activeIdx - 1 + CHANNELS.length) % CHANNELS.length, 'bwd');
 
+  const scheme = channelThemes[CHANNELS[activeIdx].key][theme];
+  const rootStyle = {
+    '--primary-color': scheme.primary,
+    '--secondary-color': scheme.secondary,
+    '--tertiary-color': scheme.tertiary,
+    background: 'var(--primary-color, #000)',
+    color: 'var(--secondary-color, #fff)'
+  };
+
   return (
-    <main>
+    <main style={rootStyle}>
       <style>{tvAnimStyles}</style>
       <div className="tv-channel-nav">
         <button className="tv-nav-btn" onClick={prevChannel}>&lt; Prev</button>
-        <span style={{color:'#c8ffe9', textShadow:'1px 2px 2px #111',fontSize:'1.4em'}}>{CHANNELS[activeIdx].name}</span>
+        <span style={{textShadow:'1px 2px 2px #111',fontSize:'1.4em'}}>{CHANNELS[activeIdx].name}</span>
         <button className="tv-nav-btn" onClick={nextChannel}>Next &gt;</button>
+        <button className="tv-nav-btn" onClick={()=>setTheme(theme==='light'?'dark':'light')}>
+          {theme==='light'?'Dark':'Light'} Mode
+        </button>
       </div>
       <div className={`channel-flip-outer ${flipDir && 'tv-static'}`}
-           style={{padding:'10px 0 32px 0', minHeight:350, background:'#23233a', borderRadius:12, boxShadow:'0 3px 28px #35386080'}}>
+           style={{padding:'10px 0 32px 0', minHeight:350, borderRadius:12, boxShadow:'0 3px 28px var(--secondary-color, #353860)'}}>
         <div key={animKey}
           className={`tv-channel-inner${flipDir? ' tv-flip':''}`}
         >

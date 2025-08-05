@@ -1,30 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import GalleryHome from './gallery/GalleryHome';
+import GalleryAlbumSportingSort from './gallery/GalleryAlbumSportingSort';
+import GalleryAlbumGlobetrotter from './gallery/GalleryAlbumGlobetrotter';
+import GalleryAlbumAuteurMonsieur from './gallery/GalleryAlbumAuteurMonsieur';
+import GalleryAlbumNewsJunket from './gallery/GalleryAlbumNewsJunket';
 
+/**
+ * Gallery channel root: displays album tiles and opens album subroutes.
+ */
 export default function Gallery() {
-  const [photos, setPhotos] = useState([]);
+  const [active, setActive] = useState(null);
+  const [source] = useState('local'); // default image source
 
-  useEffect(() => {
-    fetch('/api/gallery')
-      .then(res => res.json())
-      .then(setPhotos);
-  }, []);
+  const albums = [
+    { key: 'sporting-sort', name: 'Sporting Sort', color: '#e53935', preview: 'https://via.placeholder.com/400/ff4444' },
+    { key: 'globetrotter', name: 'Globetrotter', color: '#43a047', preview: 'https://via.placeholder.com/400/44ff44' },
+    { key: 'auteur-monsieur', name: 'Auteur Monsieur', color: '#1e88e5', preview: 'https://via.placeholder.com/400/4444ff' },
+    { key: 'news-junket', name: 'The News Junket', color: '#fdd835', preview: 'https://via.placeholder.com/400/ffff44' }
+  ];
+
+  const albumComponents = {
+    'sporting-sort': GalleryAlbumSportingSort,
+    globetrotter: GalleryAlbumGlobetrotter,
+    'auteur-monsieur': GalleryAlbumAuteurMonsieur,
+    'news-junket': GalleryAlbumNewsJunket
+  };
+
+  const Album = active ? albumComponents[active] : null;
 
   return (
     <section>
-      <h2>Photo Gallery Channel</h2>
-      <p style={{color:'#777'}}>Gallery fetches images from Express backend (<code>/images/</code>)</p>
-      <div style={{display: 'flex', gap: 10}}>
-        {photos.length ? photos.map((p, idx) => (
-          <figure key={idx}>
-            <img src={p.src} alt={p.caption} style={{width: '120px', border:'1px solid #999'}} />
-            <figcaption>{p.caption}</figcaption>
-          </figure>
-        )) : <span style={{color:'#bbb'}}>No images provided in the backend; add your own images in <b>backend/images/</b>.</span>}
-      </div>
-      <div style={{marginTop:14, fontSize:'smaller', color:'#aaa'}}>
-        (Extend: Add upload, slideshow, etc. See <b>Gallery.js</b>)
-      </div>
+      {Album ? (
+        <div>
+          <button onClick={() => setActive(null)}>Back</button>
+          <Album source={source} />
+        </div>
+      ) : (
+        <GalleryHome albums={albums} onOpen={setActive} />
+      )}
     </section>
   );
 }
-// Extension: Add slideshow, zoom, or upload functionality.
