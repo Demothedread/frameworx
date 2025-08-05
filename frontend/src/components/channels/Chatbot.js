@@ -13,28 +13,87 @@ const PROFILE_OPTIONS = [
   { key: 'fantasy', label: 'Fantasy Freeflow', desc: 'For creative projects, boosts imagination.', model: 'Fantasy Freeflow' }
 ];
 
-function ChatbotMenu({ apiKey, setApiKey, model, setModel, profile, setProfile, provider, setProvider }) {
+function ChatbotMenu({
+  apiKey, setApiKey, model, setModel, profile, setProfile, provider, setProvider,
+  useRAG, setUseRAG, vectorStoreType, setVectorStoreType, openaiVectorStoreId, setOpenaiVectorStoreId,
+  qdrantCollectionName, setQdrantCollectionName, customInstructions, setCustomInstructions
+}) {
   return (
     <div style={{padding:16, background:'#ececf2', borderRadius:8, marginBottom:12}}>
-      <label style={{marginRight:20}}>
-        <b>Provider:</b> {' '}
-        <select value={provider} onChange={e=>setProvider(e.target.value)}>
-          {AI_PROVIDERS.map((p) => <option key={p.key} value={p.key}>{p.label}</option>)}
-        </select>
-      </label>
-      <label>
-        <b>Profile:</b>{' '}
-        <select value={profile} onChange={e=>setProfile(e.target.value)}>
-          {PROFILE_OPTIONS.map(p=> <option value={p.key} key={p.key}>{p.label}</option>)}
-        </select>{' '}
-        <span style={{color:'#888',marginLeft:7}}>{PROFILE_OPTIONS.find(p=>p.key===profile)?.desc}</span>
-      </label>
-      <br /><br />
-      <label><b>Model:</b>{' '}<input value={model} placeholder={provider==='openai' ? "gpt-3.5-turbo" : provider==='gemini' ? "gemini-pro" : "meta-llama/Llama-2-70b-chat-hf"} onChange={e=>setModel(e.target.value)} /></label>
-      <br />
-      <label><b>API Key:</b>{' '}<input value={apiKey} placeholder={provider==='openai' ? "OpenAI secret key..." : provider==='gemini' ? "Gemini API key..." : "DeepInfra API key..."} onChange={e=>setApiKey(e.target.value)} style={{width:280}} /></label>
+      <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16}}>
+        <div>
+          <label style={{display:'block', marginBottom:8}}>
+            <b>Provider:</b> {' '}
+            <select value={provider} onChange={e=>setProvider(e.target.value)} style={{width:'100%'}}>
+              {AI_PROVIDERS.map((p) => <option key={p.key} value={p.key}>{p.label}</option>)}
+            </select>
+          </label>
+          <label style={{display:'block', marginBottom:8}}>
+            <b>Profile:</b>{' '}
+            <select value={profile} onChange={e=>setProfile(e.target.value)} style={{width:'100%'}}>
+              {PROFILE_OPTIONS.map(p=> <option value={p.key} key={p.key}>{p.label}</option>)}
+            </select>
+            <div style={{color:'#888',fontSize:'0.9em',marginTop:2}}>{PROFILE_OPTIONS.find(p=>p.key===profile)?.desc}</div>
+          </label>
+          <label style={{display:'block', marginBottom:8}}>
+            <b>Model:</b>{' '}
+            <input value={model} placeholder={provider==='openai' ? "gpt-3.5-turbo" : provider==='gemini' ? "gemini-pro" : "meta-llama/Llama-2-70b-chat-hf"} onChange={e=>setModel(e.target.value)} style={{width:'100%'}} />
+          </label>
+          <label style={{display:'block', marginBottom:8}}>
+            <b>API Key:</b>{' '}
+            <input type="password" value={apiKey} placeholder={provider==='openai' ? "OpenAI secret key..." : provider==='gemini' ? "Gemini API key..." : "DeepInfra API key..."} onChange={e=>setApiKey(e.target.value)} style={{width:'100%'}} />
+          </label>
+        </div>
+        
+        <div>
+          <label style={{display:'block', marginBottom:8}}>
+            <input type="checkbox" checked={useRAG} onChange={e=>setUseRAG(e.target.checked)} style={{marginRight:8}} />
+            <b>Enable RAG (Knowledge Base)</b>
+          </label>
+          
+          {useRAG && (
+            <>
+              <label style={{display:'block', marginBottom:8}}>
+                <b>Vector Store:</b>{' '}
+                <select value={vectorStoreType} onChange={e=>setVectorStoreType(e.target.value)} style={{width:'100%'}}>
+                  <option value="uploadandsort">UploadAndSort (Local)</option>
+                  <option value="local">Neon Database (Local)</option>
+                  <option value="openai">OpenAI Vector Store</option>
+                  <option value="qdrant">Qdrant Collection</option>
+                </select>
+              </label>
+              
+              {vectorStoreType === 'openai' && (
+                <label style={{display:'block', marginBottom:8}}>
+                  <b>OpenAI Vector Store ID:</b>{' '}
+                  <input value={openaiVectorStoreId} onChange={e=>setOpenaiVectorStoreId(e.target.value)} placeholder="vs_xxx..." style={{width:'100%'}} />
+                </label>
+              )}
+              
+              {vectorStoreType === 'qdrant' && (
+                <label style={{display:'block', marginBottom:8}}>
+                  <b>Qdrant Collection:</b>{' '}
+                  <input value={qdrantCollectionName} onChange={e=>setQdrantCollectionName(e.target.value)} placeholder="collection_name" style={{width:'100%'}} />
+                </label>
+              )}
+            </>
+          )}
+          
+          <label style={{display:'block', marginBottom:8}}>
+            <b>Custom Instructions:</b>{' '}
+            <textarea
+              value={customInstructions}
+              onChange={e=>setCustomInstructions(e.target.value)}
+              placeholder="Add specific instructions for the AI..."
+              rows={3}
+              style={{width:'100%', resize:'vertical'}}
+            />
+          </label>
+        </div>
+      </div>
+      
       <div style={{color:'#888', fontSize:'0.96em',marginTop:7}}>
-        API keys are only used for remote model/cms calls. <b>Never share secrets unnecessarily!</b>
+        API keys are only used for remote model/cms calls. RAG enhances responses with your knowledge base. <b>Never share secrets unnecessarily!</b>
       </div>
     </div>
   );
@@ -48,10 +107,21 @@ export default function Chatbot() {
   const [profile, setProfile] = useState('default');
   const [provider, setProvider] = useState('openai');
   const [loading, setLoading] = useState(false);
+  
+  // RAG and Custom Instructions state
+  const [useRAG, setUseRAG] = useState(false);
+  const [vectorStoreType, setVectorStoreType] = useState('uploadandsort');
+  const [openaiVectorStoreId, setOpenaiVectorStoreId] = useState(localStorage.getItem('openai_vector_store_id')||'');
+  const [qdrantCollectionName, setQdrantCollectionName] = useState(localStorage.getItem('qdrant_collection_name')||'');
+  const [customInstructions, setCustomInstructions] = useState(localStorage.getItem('custom_instructions')||'');
+  
   const logEnd = useRef();
 
   function remember() {
     localStorage.setItem('ai_api_key', apiKey || '');
+    localStorage.setItem('openai_vector_store_id', openaiVectorStoreId || '');
+    localStorage.setItem('qdrant_collection_name', qdrantCollectionName || '');
+    localStorage.setItem('custom_instructions', customInstructions || '');
   }
 
   function send(e) {
@@ -61,16 +131,33 @@ export default function Chatbot() {
     const myPrompt = prompt;
     setPrompt('');
     setChatlog(cl => [...cl, { role: 'user', text: myPrompt, ts: Date.now() }]);
+    
+    const requestBody = {
+      prompt: myPrompt,
+      profile,
+      apiKey,
+      model,
+      provider,
+      useRAG,
+      vectorStoreType,
+      openaiVectorStoreId,
+      qdrantCollectionName,
+      customInstructions
+    };
+    
     apiFetch('/api/chatbot/ask', {
       method:'POST',
       headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify({ prompt: myPrompt, profile, apiKey, model, provider })
+      body: JSON.stringify(requestBody)
     })
       .then(data => setChatlog(cl => [...cl, {
         role: 'bot',
         text: data.reply,
         botName: data.bot,
         source: data.source,
+        ragResults: data.ragResults,
+        usedRAG: data.usedRAG,
+        searchResults: data.searchResults,
         ts: Date.now()
       }]))
       .catch(e => setChatlog(cl => [...cl, { role:'bot', text:'⚠️ Error: '+e.message }]))
@@ -89,8 +176,17 @@ export default function Chatbot() {
     <section style={personaSectionStyle(profile)}>
       <style>{personaCSS}</style>
       <h2 className={"chatbot-persona-head"}>{personaName(profile)}</h2>
-      <ChatbotMenu apiKey={apiKey} setApiKey={setApiKey} model={model} setModel={setModel} 
-        profile={profile} setProfile={setProfile} provider={provider} setProvider={setProvider} />
+      <ChatbotMenu
+        apiKey={apiKey} setApiKey={setApiKey}
+        model={model} setModel={setModel}
+        profile={profile} setProfile={setProfile}
+        provider={provider} setProvider={setProvider}
+        useRAG={useRAG} setUseRAG={setUseRAG}
+        vectorStoreType={vectorStoreType} setVectorStoreType={setVectorStoreType}
+        openaiVectorStoreId={openaiVectorStoreId} setOpenaiVectorStoreId={setOpenaiVectorStoreId}
+        qdrantCollectionName={qdrantCollectionName} setQdrantCollectionName={setQdrantCollectionName}
+        customInstructions={customInstructions} setCustomInstructions={setCustomInstructions}
+      />
       <form onSubmit={send} style={{marginBottom:18, textAlign:'center'}}>
         <input className={"chatbot-prompt-inp"} value={prompt} onChange={e=>setPrompt(e.target.value)} 
           placeholder="Type your question or prompt..." autoFocus disabled={loading} />
@@ -103,10 +199,50 @@ export default function Chatbot() {
             {msg.role==='user' ? 
               <span className={"chatbot-user-msg"}>{msg.text}</span>
               :
-              <span className={"chatbot-bot-msg chatbot-bot-msg-"+profile}>
-                <b style={{color: profileColor(msg.botName || '')}}>{msg.botName||'Bot'}:</b> {' '}
+              <div className={"chatbot-bot-msg chatbot-bot-msg-"+profile}>
+                <div>
+                  <b style={{color: profileColor(msg.botName || '')}}>{msg.botName||'Bot'}:</b> {' '}
+                  {msg.usedRAG && <span style={{backgroundColor:'#e8f5e8', padding:'2px 6px', borderRadius:'3px', fontSize:'0.8em', color:'#2d5a2d'}}>RAG</span>}
+                  {msg.searchResults && <span style={{backgroundColor:'#e8f0ff', padding:'2px 6px', borderRadius:'3px', fontSize:'0.8em', color:'#1a5490', marginLeft:'4px'}}>WEB</span>}
+                </div>
                 <span dangerouslySetInnerHTML={{__html:formatBotReply(msg.text, msg.botName, msg.source)}} />
-              </span>
+                
+                {/* Display RAG Results */}
+                {msg.ragResults && msg.ragResults.length > 0 && (
+                  <details style={{marginTop:'8px', fontSize:'0.9em'}}>
+                    <summary style={{cursor:'pointer', color:'#666'}}>📚 Knowledge Base Sources ({msg.ragResults.length})</summary>
+                    <div style={{marginTop:'4px', paddingLeft:'16px'}}>
+                      {msg.ragResults.slice(0, 3).map((result, idx) => (
+                        <div key={idx} style={{marginBottom:'6px', padding:'4px', backgroundColor:'#f9f9f9', borderRadius:'4px'}}>
+                          <div style={{fontWeight:'bold', fontSize:'0.85em'}}>{result.filename || result.source || `Source ${idx + 1}`}</div>
+                          <div style={{fontSize:'0.8em', color:'#666'}}>{(result.content_text || result.summary || result.content || '').slice(0, 150)}...</div>
+                          {result.similarity && <div style={{fontSize:'0.75em', color:'#888'}}>Similarity: {(result.similarity * 100).toFixed(1)}%</div>}
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                )}
+                
+                {/* Display Web Search Results */}
+                {msg.searchResults && msg.searchResults.length > 0 && (
+                  <details style={{marginTop:'8px', fontSize:'0.9em'}}>
+                    <summary style={{cursor:'pointer', color:'#666'}}>🔍 Web Search Results ({msg.searchResults.length})</summary>
+                    <div style={{marginTop:'4px', paddingLeft:'16px'}}>
+                      {msg.searchResults.slice(0, 3).map((result, idx) => (
+                        <div key={idx} style={{marginBottom:'6px', padding:'4px', backgroundColor:'#f0f8ff', borderRadius:'4px'}}>
+                          <div style={{fontWeight:'bold', fontSize:'0.85em'}}>
+                            <a href={result.url} target="_blank" rel="noopener noreferrer" style={{textDecoration:'none', color:'#1a5490'}}>
+                              {result.title}
+                            </a>
+                          </div>
+                          <div style={{fontSize:'0.8em', color:'#666'}}>{result.snippet}</div>
+                          <div style={{fontSize:'0.75em', color:'#888'}}>{result.court} - {result.date}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                )}
+              </div>
             }
           </div>
         )}

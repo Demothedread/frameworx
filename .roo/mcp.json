@@ -1,0 +1,270 @@
+{
+  "mcpServers": {
+    "sequentialthinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "description": "Sequential thinking and reasoning capabilities"
+    },
+    "neon": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.neon.tech/sse"
+      ],
+      "description": "Neon database integration for vector storage and knowledge graphs",
+      "capabilities": ["database", "vector-search", "knowledge-graph"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {
+        "DEFAULT_MINIMUM_TOKENS": "100"
+      },
+      "description": "Context management and memory optimization"
+    },
+    "figma-dev-mode": {
+      "type": "sse",
+      "url": "http://127.0.0.1:3845/sse",
+      "description": "Figma development mode integration for design workflows"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/jreback/projects/*"
+      ],
+      "description": "Local filesystem access and file operations"
+    },
+    "apify": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@apify/actors-mcp-server"
+      ],
+      "env": {
+        "APIFY_TOKEN": "apify_api_qW9ypbzkDaXcQ9bXPcTFvcSFUwVFuJ4Am7M0"
+      },
+      "description": "Web scraping and automation via Apify platform",
+      "capabilities": ["web-scraping", "court-listener", "legal-research"]
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "description": "GitHub integration for repository management and code analysis"
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+      },
+      "description": "Enhanced web search capabilities via Brave Search API"
+    },
+    "postgres": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres"
+      ],
+      "env": {
+        "POSTGRES_CONNECTION_STRING": "${NEON_DATABASE_URL}"
+      },
+      "description": "Direct PostgreSQL database operations for advanced queries"
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ],
+      "description": "Browser automation for dynamic web scraping and testing"
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sqlite",
+        "./data/cache.db"
+      ],
+      "description": "Local SQLite database for caching and temporary data storage"
+    },
+    "time": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-time"
+      ],
+      "description": "Time and date utilities for scheduling and temporal operations"
+    },
+    "everything": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-everything"
+      ],
+      "description": "Windows Everything search integration (if on Windows)"
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "description": "Advanced memory management and context persistence"
+    }
+  },
+  "global": {
+    "timeout": 30000,
+    "retry": {
+      "attempts": 3,
+      "delay": 1000
+    },
+    "logging": {
+      "level": "info",
+      "file": "./logs/mcp.log"
+    }
+  },
+  "features": {
+    "vector-search": {
+      "enabled": true,
+      "providers": ["neon", "postgres"],
+      "default_limit": 10,
+      "similarity_threshold": 0.7
+    },
+    "web-scraping": {
+      "enabled": true,
+      "providers": ["apify", "puppeteer"],
+      "rate_limit": {
+        "requests_per_minute": 60,
+        "burst_limit": 10
+      },
+      "cache_duration": 3600
+    },
+    "knowledge-graph": {
+      "enabled": true,
+      "provider": "neon",
+      "auto_update": true,
+      "relationship_types": [
+        "related_to",
+        "part_of",
+        "authored_by",
+        "categorized_as",
+        "tagged_with"
+      ]
+    },
+    "sports-integration": {
+      "enabled": true,
+      "apis": ["espn", "sportsdata"],
+      "update_interval": 300,
+      "cache_enabled": true
+    },
+    "blog-cms": {
+      "enabled": true,
+      "markdown_support": true,
+      "categories": true,
+      "tags": true,
+      "comments": true,
+      "social_sharing": true
+    },
+    "gaming": {
+      "enabled": true,
+      "multiplayer": true,
+      "achievements": true,
+      "leaderboards": true,
+      "tournaments": true
+    }
+  },
+  "integrations": {
+    "chatbot": {
+      "rag_enabled": true,
+      "web_search": true,
+      "vector_stores": ["openai", "qdrant", "local", "uploadandsort"],
+      "custom_instructions": true
+    },
+    "landing_page": {
+      "tv_guide_mode": true,
+      "auto_scroll": true,
+      "sports_feed": true,
+      "live_updates": true
+    },
+    "blog": {
+      "rich_editor": true,
+      "markdown": true,
+      "rss_feed": true,
+      "reading_time": true,
+      "related_posts": true
+    },
+    "games": {
+      "types": ["snake", "tetris", "pong", "memory", "guess"],
+      "social_features": true,
+      "statistics": true,
+      "replay_system": true
+    }
+  },
+  "security": {
+    "api_key_rotation": {
+      "enabled": true,
+      "interval_days": 30
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "default_limit": 1000,
+      "burst_multiplier": 2
+    },
+    "input_validation": {
+      "enabled": true,
+      "max_input_length": 10000,
+      "sanitize_html": true
+    }
+  },
+  "monitoring": {
+    "health_checks": {
+      "enabled": true,
+      "interval": 60,
+      "endpoints": [
+        "/api/health",
+        "/api/sports/health",
+        "/api/chatbot/health"
+      ]
+    },
+    "metrics": {
+      "enabled": true,
+      "collect_usage": true,
+      "performance_tracking": true
+    },
+    "alerts": {
+      "enabled": true,
+      "error_threshold": 10,
+      "response_time_threshold": 5000
+    }
+  },
+  "development": {
+    "hot_reload": true,
+    "debug_mode": false,
+    "mock_external_apis": false,
+    "test_mode": false
+  },
+  "production": {
+    "optimize_bundle": true,
+    "compress_responses": true,
+    "cache_static_assets": true,
+    "enable_cdn": true
+  }
+}

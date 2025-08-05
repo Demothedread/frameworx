@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "title": "Welcome to the Blog Channel!",
+    "summary": "This is a real CMS-powered section. Posts come from blogData.json.",
+    "content": "Simply edit blogData.json or connect to your remote CMS. Plug in fetch logic in Blog.js.",
+    "author": "Admin",
+    "date": "2024-06-09"
+  },
+  {
+    "id": 2,
+    "title": "How to wire up a real headless CMS",
+    "summary": "Use fetch or plugin SDKs for Contentful/Sanity/WordPress.",
+    "content": "Replace fetch() in Blog.js with your CMS API. Render new post list and post components!",
+    "author": "DevBot",
+    "date": "2024-06-08"
+  }
+]

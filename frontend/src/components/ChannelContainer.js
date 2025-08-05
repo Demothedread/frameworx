@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 
 
@@ -28,8 +28,6 @@ const CHANNELS = [
   { key: 'game', name: 'Game (Sample)', Component: Game },
   { key: 'admin', name: 'Admin', Component: Admin },
 ];
-
-import React, { useState, useRef } from 'react';
 
 // Animation CSS (TV flip/static effect)
 const tvAnimStyles = `

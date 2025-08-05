@@ -2,7 +2,7 @@
   "name": "channel-rolodex-root",
   "private": true,
   "scripts": {
-    "start": "concurrently \"npm run start --prefix backend\" \"npm start --prefix frontend\""
+    "start": "concurrently \"npm  --prefix backend\" \"npm start --prefix frontend\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
