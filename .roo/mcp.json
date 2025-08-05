@@ -12,7 +12,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "mcp-remote",
+        "mcp-remote",                                                                                                                                                                                                                                                                                                                                                                            
         "https://mcp.neon.tech/sse"
       ],
       "description": "Neon database integration for vector storage and knowledge graphs",
@@ -50,7 +50,7 @@
         "@apify/actors-mcp-server"
       ],
       "env": {
-        "APIFY_TOKEN": "apify_api_qW9ypbzkDaXcQ9bXPcTFvcSFUwVFuJ4Am7M0"
+        "APIFY_TOKEN": "${APIFY_API_TOKEN}"
       },
       "description": "Web scraping and automation via Apify platform",
       "capabilities": ["web-scraping", "court-listener", "legal-research"]
