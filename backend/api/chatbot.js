@@ -1,6 +1,8 @@
 const express = require('express');
 const fetch = (...args) => import('node-fetch').then(({default:fetch}) => fetch(...args));
 const router = express.Router();
+const WebScraper = require('../utils/webScraper');
+const RAGService = require('../utils/ragService');
 
 /**
  * Route: POST /api/chatbot/ask
@@ -15,11 +17,47 @@ router.post(
   rateLimiter,
   validateInput({ prompt: { required:true, maxLen:2000 } }),
   async (req, res) => {
-  const { prompt, profile, apiKey, model, provider } = req.body;
+  const { prompt, profile, apiKey, model, provider, useRAG, vectorStoreType, openaiVectorStoreId, qdrantCollectionName, customInstructions } = req.body;
   try {
+    // ---- RAG ENHANCEMENT ----
+    let ragContext = '';
+    let ragResults = null;
+    
+    if (useRAG && apiKey) {
+      try {
+        const ragService = new RAGService();
+        const ragSearchResult = await ragService.performRAGSearch(prompt, {
+          apiKey,
+          vectorStoreType: vectorStoreType || 'uploadandsort',
+          openaiVectorStoreId,
+          qdrantCollectionName,
+          limit: 5
+        });
+        
+        ragResults = ragSearchResult.results;
+        ragContext = ragService.buildContextFromResults(ragResults);
+      } catch (ragError) {
+        console.error('RAG search failed:', ragError);
+        // Continue without RAG if it fails
+      }
+    }
+    
     if (provider === 'openai') {
       // ---- OPENAI GPT-3/4 ----
       if (!apiKey) return res.status(400).json({error:'API key required for OpenAI'});
+      
+      // Build enhanced system prompt with custom instructions and RAG context
+      let systemPrompt = personaPrompt(profile);
+      
+      if (customInstructions) {
+        systemPrompt += `\n\nCustom Instructions: ${customInstructions}`;
+      }
+      
+      if (ragContext) {
+        systemPrompt += `\n\n${ragContext}`;
+        systemPrompt += '\n\nPlease use the above context when relevant to answer the user\'s question. If the context doesn\'t contain relevant information, answer based on your training knowledge.';
+      }
+      
       const result = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -28,13 +66,18 @@ router.post(
         },
         body: JSON.stringify({
           model: model || 'gpt-3.5-turbo',
-          messages: [{ role: "system", content: personaPrompt(profile) }, { role: "user", content: prompt }],
+          messages: [{ role: "system", content: systemPrompt }, { role: "user", content: prompt }],
           temperature: profile==='fantasy'?0.98: 0.3
         })
       });
       const json = await result.json();
       if(json.error) throw new Error(json.error.message);
-      return res.json({ bot: model, reply: json.choices[0].message.content });
+      return res.json({
+        bot: model,
+        reply: json.choices[0].message.content,
+        ragResults,
+        usedRAG: !!ragContext
+      });
     }
     if (provider === 'gemini') {
       // ---- GOOGLE GEMINI ----
@@ -68,14 +111,55 @@ router.post(
       const json = await result.json();
       const reply = json.results?.[0]?.generated_text || json.generated_text || 'No response.';
       return res.json({ bot: llamaModel, reply });
-    }
     // Demo legacy profiles (stub implementations)
     if (profile === 'legal') {
-      // Stub: simple legal-style response
-      return res.json({
-        bot: 'Legal Scholar',
-        reply: `As a Legal Scholar, here is my analysis of your prompt: "${prompt}".`
-      });
+      // Enhanced Legal Scholar with CourtListener search
+      try {
+        const scraper = new WebScraper();
+        
+        // Check for cached results first
+        let searchResults = await scraper.getCachedResults(prompt, 'courtlistener');
+        
+        if (!searchResults) {
+          // Perform fresh search
+          searchResults = await scraper.searchCourtListener(prompt, 5);
+          
+          // Cache the results
+          if (searchResults.length > 0) {
+            await scraper.cacheResults(prompt, searchResults, 'courtlistener');
+          }
+        }
+        
+        let reply = `As a Legal Scholar, I've researched "${prompt}" and found the following relevant legal precedents:\n\n`;
+        
+        if (searchResults.length > 0) {
+          searchResults.forEach((result, index) => {
+            reply += `${index + 1}. **${result.title}**\n`;
+            reply += `   Court: ${result.court}\n`;
+            reply += `   Date: ${result.date}\n`;
+            reply += `   Summary: ${result.snippet}\n`;
+            reply += `   [Read Full Opinion](${result.url})\n\n`;
+          });
+          
+          reply += `These cases provide relevant legal precedents for your query. Each opinion contains detailed legal reasoning that may be applicable to your research.`;
+        } else {
+          reply += `I was unable to find specific legal precedents for "${prompt}" in the CourtListener database. This could be due to the specificity of your query or current database limitations. I recommend refining your search terms or consulting additional legal databases.`;
+        }
+        
+        return res.json({
+          bot: 'Legal Scholar',
+          reply,
+          searchResults,
+          source: searchResults.length > 0 ? searchResults[0] : null
+        });
+      } catch (error) {
+        console.error('Legal search error:', error);
+        return res.json({
+          bot: 'Legal Scholar',
+          reply: `I encountered an error while searching legal databases for "${prompt}". As a Legal Scholar, I can still provide general analysis, but I recommend checking CourtListener directly for the most current legal precedents.`
+        });
+      }
+    }
     }
     if (profile === 'news') {
       // Stub: simple news-style response with dummy source
@@ -122,5 +206,120 @@ function fantasyAdvice(q) {
   if(q.toLowerCase().includes('name')) return "Mix syllables wild and ancient: Zarion, Elysil, Brandrune!";
   return "Ask for anything—advice, visions, worlds.";
 }
+
+// New endpoint for web search functionality
+router.post('/search', rateLimiter, validateInput({ query: { required: true, maxLen: 500 } }), async (req, res) => {
+  const { query, sources = ['courtlistener'], limit = 5 } = req.body;
+  
+  try {
+    const scraper = new WebScraper();
+    
+    // Check cache first
+    let cachedResults = null;
+    for (const source of sources) {
+      const cached = await scraper.getCachedResults(query, source);
+      if (cached && cached.length > 0) {
+        cachedResults = cached;
+        break;
+      }
+    }
+    
+    if (cachedResults) {
+      return res.json({
+        query,
+        results: cachedResults,
+        cached: true,
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    // Perform fresh search
+    const results = await scraper.searchLegalDatabases(query, sources, limit);
+    
+    // Cache results if any found
+    if (results.length > 0) {
+      await scraper.cacheResults(query, results, sources.join(','));
+    }
+    
+    res.json({
+      query,
+      results,
+      cached: false,
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error('Web search error:', error);
+    res.status(500).json({
+      error: 'Web search failed',
+      message: error.message,
+      query
+    });
+  }
+});
+
+// RAG search endpoint
+router.post('/rag', rateLimiter, validateInput({ query: { required: true, maxLen: 500 } }), async (req, res) => {
+  const { query, vectorStoreType = 'uploadandsort', openaiVectorStoreId, qdrantCollectionName, apiKey, limit = 5 } = req.body;
+  
+  try {
+    if (!apiKey) {
+      return res.status(400).json({ error: 'API key required for RAG operations' });
+    }
+    
+    const ragService = new RAGService();
+    const ragResults = await ragService.performRAGSearch(query, {
+      apiKey,
+      vectorStoreType,
+      openaiVectorStoreId,
+      qdrantCollectionName,
+      limit
+    });
+    
+    const context = ragService.buildContextFromResults(ragResults.results);
+    
+    res.json({
+      query,
+      vectorStoreType,
+      results: ragResults.results,
+      context,
+      resultCount: ragResults.resultCount,
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error('RAG search error:', error);
+    res.status(500).json({
+      error: 'RAG search failed',
+      message: error.message,
+      query
+    });
+  }
+});
+
+// Endpoint to get detailed opinion content
+router.get('/opinion/:id', rateLimiter, async (req, res) => {
+  const { id } = req.params;
+  const opinionUrl = decodeURIComponent(id);
+  
+  try {
+    const scraper = new WebScraper();
+    const opinionDetails = await scraper.getOpinionDetails(opinionUrl);
+    
+    res.json({
+      success: true,
+      opinion: opinionDetails,
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error('Opinion fetch error:', error);
+    res.status(500).json({
+      error: 'Failed to fetch opinion details',
+      message: error.message,
+      url: opinionUrl
+    });
+  }
+});
 
 module.exports = router;
