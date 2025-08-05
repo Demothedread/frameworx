@@ -8,3 +8,4 @@
 node_modules/
 .roo/
 .roo/*
+.DS_Store
