@@ -65,7 +65,7 @@ router.post(
           'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: model || 'gpt-3.5-turbo',
+          model: model || 'gpt-4o',
           messages: [{ role: "system", content: systemPrompt }, { role: "user", content: prompt }],
           temperature: profile==='fantasy'?0.98: 0.3
         })

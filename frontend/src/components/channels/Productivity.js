@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+
+import { useContext, useEffect } from 'react';
+import { SharedStateContext } from '../../context/SharedStateContext';
 
 export default function Productivity() {
   // Simple instructive to-do placeholder
   const [tasks, setTasks] = useState([]);
   const [inp, setInp] = useState('');
+  const sharedState = useContext(SharedStateContext);
+  const eventBus = sharedState?.eventBus;
+
+  useEffect(() => {
+    eventBus?.emit('user-action', { type: 'visit-channel', value: 'productivity' });
+  }, [eventBus]);
 
   return (
     <section>
