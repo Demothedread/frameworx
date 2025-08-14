@@ -9,6 +9,7 @@ const uploadAndSortChannel = require('../channels/uploadandsort');
 const adminApi = require('../api/admin');
 const errorHandler = require('../middleware/errorHandler');
 const { getEnv } = require('../utils/env');
+const logger = require('../../shared/utils/logger');
 
 function createApp() {
   const app = express();
@@ -23,7 +24,15 @@ function createApp() {
     }),
   );
   app.use(express.json());
+  app.use(
+    '/images/auteur-monsieur',
+    express.static(path.join(__dirname, '..', 'images', 'auteur-monsieur'))
+  );
   app.use('/images', express.static(path.join(__dirname, '..', 'images')));
+  app.use(
+    '/frames',
+    express.static(path.join(__dirname, '..', '..', 'assets', 'frames-compressed'))
+  );
   app.use('/api/gallery', galleryApi);
   app.use('/api/game', gameApi);
   app.use('/api/auth', authApi);
@@ -38,8 +47,8 @@ function createApp() {
 function startServer(port = process.env.PORT || 4000) {
   const app = createApp();
   app.listen(port, () => {
-    require("../../shared/utils/logger").info(`Backend listening on port ${port}`);
-    require('../../shared/utils/logger').info('Serving images at /images');
+    logger.info(`Backend listening on port ${port}`);
+    logger.info('Serving auteur images at /images/auteur-monsieur');
   });
 }
 

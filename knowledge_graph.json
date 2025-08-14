@@ -7,7 +7,8 @@
     {"id": "gallery_tile_component", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryTile.js"], "desc": "Rhombus album selection tile"},
     {"id": "gallery_album_sporting_sort", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumSportingSort.js"], "desc": "Sporting Sort album layout"},
     {"id": "gallery_album_globetrotter", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumGlobetrotter.js"], "desc": "Globetrotter album layout"},
-    {"id": "gallery_album_auteur_monsieur", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumAuteurMonsieur.js"], "desc": "Auteur Monsieur album layout"},
+    {"id": "gallery_album_auteur_monsieur", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumAuteurMonsieur.js"], "desc": "Auteur Monsieur album with French salon frame wall and images listed by gallery API"},
+    {"id": "backend_gallery_api", "type": "module", "files": ["backend/api/gallery.js"], "desc": "Express router that lists album images from backend/images"},
     {"id": "gallery_album_news_junket", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumNewsJunket.js"], "desc": "News Junket album layout"}
   ],
   "features": [
@@ -24,7 +25,8 @@
     {"from": "frontend_gallery_channel", "to": "gallery_album_sporting_sort", "type": "routes"},
     {"from": "frontend_gallery_channel", "to": "gallery_album_globetrotter", "type": "routes"},
     {"from": "frontend_gallery_channel", "to": "gallery_album_auteur_monsieur", "type": "routes"},
-    {"from": "frontend_gallery_channel", "to": "gallery_album_news_junket", "type": "routes"}
+    {"from": "frontend_gallery_channel", "to": "gallery_album_news_junket", "type": "routes"},
+    {"from": "gallery_album_auteur_monsieur", "to": "backend_gallery_api", "type": "fetches"}
   ],
   "notes": ["Added in-memory scoreboard with submit and list endpoints.", "Added animated gallery home with four themed albums."]
 }

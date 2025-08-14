@@ -12,8 +12,8 @@ A modular channel-based web framework for flipping between fully-contained funct
     ```
 
     - Serves APIs at `http://localhost:4000/api/*`.
-    - Serves static gallery images at `http://localhost:4000/images/a.jpg` etc.
-    - API sample: curl http://localhost:4000/api/gallery
+    - Serves static gallery images at `http://localhost:4000/images/<file>`.
+    - API sample: `curl http://localhost:4000/api/gallery/auteur-monsieur`
 
 2. **Frontend:**
     ```sh
@@ -59,7 +59,7 @@ Channels implemented:
 
 ## FAQs
 
-- *Why don't I see real photos in the gallery?* — Images are stubbed, you can replace `backend/images/a.jpg` and `b.jpg` with your own.
+- *Why don't I see real photos in the gallery?* — No photos ship with the repo. Drop your own images into `backend/images/auteur-monsieur/`.
 - *How do I deploy?* —
   - Backend: e.g. on Heroku, fly.io, or any Node host.
   - Frontend: `npm run build` in `frontend/` creates deployable static files, which can be served by Express or any host.
