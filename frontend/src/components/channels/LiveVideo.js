@@ -1,8 +1,7 @@
 // LiveVideo.js - Audience Voting System Integration
 
 import React, { useEffect, useState, useRef } from 'react';
-// You must install socket.io-client: npm install socket.io-client
-import { io } from 'socket.io-client';
+import { io } from '../../utils/socketClient';
 
 function getVoterId() {
   // Simple random voter ID for demo; replace with user auth/session in production

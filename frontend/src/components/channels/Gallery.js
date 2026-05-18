@@ -69,7 +69,7 @@ export default function Gallery() {
   ];
 
   const albumComponents = {
-    'sporty-sports': GalleryAlbumSportySports,
+    'sporty-sports': GalleryAlbumSportingSort,
     globetrotter: GalleryAlbumGlobetrotter,
     'auteur-monsieur': GalleryAlbumAuteurMonsieur,
     'news-junket': GalleryAlbumNewsJunket

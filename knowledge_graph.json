@@ -1,32 +1,185 @@
 {
   "entities": [
-    {"id": "MindMap", "type": "frontend-channel", "files": ["frontend/src/components/channels/MindMap.js"], "notes": "3D mind map of personal relationships"},
-    {"id": "backend_game_api", "type": "module", "desc": "Express router for game endpoints"},
-    {"id": "frontend_game_channel", "type": "component", "desc": "React channel for game scoreboard"},
-    {"id": "frontend_gallery_channel", "type": "component", "files": ["frontend/src/components/channels/Gallery.js"], "desc": "Gallery channel with album tiles and subroutes"},
-    {"id": "gallery_tile_component", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryTile.js"], "desc": "Rhombus album selection tile"},
-    {"id": "gallery_album_sporting_sort", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumSportingSort.js"], "desc": "Sporting Sort album layout"},
-    {"id": "gallery_album_globetrotter", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumGlobetrotter.js"], "desc": "Globetrotter album layout"},
-    {"id": "gallery_album_auteur_monsieur", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumAuteurMonsieur.js"], "desc": "Auteur Monsieur album with French salon frame wall and images listed by gallery API"},
-    {"id": "backend_gallery_api", "type": "module", "files": ["backend/api/gallery.js"], "desc": "Express router that lists album images from backend/images"},
-    {"id": "gallery_album_news_junket", "type": "component", "files": ["frontend/src/components/channels/gallery/GalleryAlbumNewsJunket.js"], "desc": "News Junket album layout"}
+    {
+      "id": "MindMap",
+      "type": "frontend-channel",
+      "files": [
+        "frontend/src/components/channels/MindMap.js"
+      ],
+      "notes": "3D mind map of personal relationships"
+    },
+    {
+      "id": "backend_game_api",
+      "type": "module",
+      "desc": "Express router for game endpoints"
+    },
+    {
+      "id": "frontend_game_channel",
+      "type": "component",
+      "desc": "React channel for game scoreboard"
+    },
+    {
+      "id": "frontend_gallery_channel",
+      "type": "component",
+      "files": [
+        "frontend/src/components/channels/Gallery.js"
+      ],
+      "desc": "Gallery channel with album tiles and subroutes"
+    },
+    {
+      "id": "gallery_tile_component",
+      "type": "component",
+      "files": [
+        "frontend/src/components/channels/gallery/GalleryTile.js"
+      ],
+      "desc": "Rhombus album selection tile"
+    },
+    {
+      "id": "gallery_album_sporting_sort",
+      "type": "component",
+      "files": [
+        "frontend/src/components/channels/gallery/GalleryAlbumSportingSort.js"
+      ],
+      "desc": "Sporting Sort album layout"
+    },
+    {
+      "id": "gallery_album_globetrotter",
+      "type": "component",
+      "files": [
+        "frontend/src/components/channels/gallery/GalleryAlbumGlobetrotter.js"
+      ],
+      "desc": "Globetrotter album layout"
+    },
+    {
+      "id": "gallery_album_auteur_monsieur",
+      "type": "component",
+      "files": [
+        "frontend/src/components/channels/gallery/GalleryAlbumAuteurMonsieur.js"
+      ],
+      "desc": "Auteur Monsieur album with French salon frame wall and images listed by gallery API"
+    },
+    {
+      "id": "backend_gallery_api",
+      "type": "module",
+      "files": [
+        "backend/api/gallery.js"
+      ],
+      "desc": "Express router that lists album images from backend/images"
+    },
+    {
+      "id": "gallery_album_news_junket",
+      "type": "component",
+      "files": [
+        "frontend/src/components/channels/gallery/GalleryAlbumNewsJunket.js"
+      ],
+      "desc": "News Junket album layout"
+    },
+    {
+      "id": "backend_validate_input_middleware",
+      "type": "module",
+      "files": [
+        "backend/middleware/validateInput.js",
+        "backend/tests/validateInput.test.js"
+      ],
+      "desc": "Reusable request body validator with whitespace-aware required checks and max length validation."
+    },
+    {
+      "id": "frontend_socket_client_adapter",
+      "type": "module",
+      "files": [
+        "frontend/src/utils/socketClient.js",
+        "frontend/src/components/channels/LiveVideo.js"
+      ],
+      "desc": "Socket.IO-like browser adapter for voting channel when external socket.io-client package is unavailable."
+    }
   ],
   "features": [
-    {"id": "mind-map", "desc": "Visualization of close vs distant connections"},
-    {"id": "scoreboard", "desc": "Submit and list top scores"},
-    {"id": "gallery-home", "desc": "Animated album selection tiles"},
-    {"id": "album-subroutes", "desc": "Distinct layouts per photo album"}
+    {
+      "id": "mind-map",
+      "desc": "Visualization of close vs distant connections"
+    },
+    {
+      "id": "scoreboard",
+      "desc": "Submit and list top scores"
+    },
+    {
+      "id": "gallery-home",
+      "desc": "Animated album selection tiles"
+    },
+    {
+      "id": "album-subroutes",
+      "desc": "Distinct layouts per photo album"
+    },
+    {
+      "id": "validation-whitespace-required",
+      "desc": "Required string fields are treated as missing when only whitespace is provided."
+    },
+    {
+      "id": "livevideo-build-safe-socket-adapter",
+      "desc": "LiveVideo channel compiles without socket.io-client by using an internal socket adapter."
+    }
   ],
   "relations": [
-    {"from": "ChannelContainer", "to": "MindMap", "type": "imports"},
-    {"from": "frontend_game_channel", "to": "backend_game_api", "type": "fetches"},
-    {"from": "ChannelContainer", "to": "frontend_gallery_channel", "type": "imports"},
-    {"from": "frontend_gallery_channel", "to": "gallery_tile_component", "type": "renders"},
-    {"from": "frontend_gallery_channel", "to": "gallery_album_sporting_sort", "type": "routes"},
-    {"from": "frontend_gallery_channel", "to": "gallery_album_globetrotter", "type": "routes"},
-    {"from": "frontend_gallery_channel", "to": "gallery_album_auteur_monsieur", "type": "routes"},
-    {"from": "frontend_gallery_channel", "to": "gallery_album_news_junket", "type": "routes"},
-    {"from": "gallery_album_auteur_monsieur", "to": "backend_gallery_api", "type": "fetches"}
+    {
+      "from": "ChannelContainer",
+      "to": "MindMap",
+      "type": "imports"
+    },
+    {
+      "from": "frontend_game_channel",
+      "to": "backend_game_api",
+      "type": "fetches"
+    },
+    {
+      "from": "ChannelContainer",
+      "to": "frontend_gallery_channel",
+      "type": "imports"
+    },
+    {
+      "from": "frontend_gallery_channel",
+      "to": "gallery_tile_component",
+      "type": "renders"
+    },
+    {
+      "from": "frontend_gallery_channel",
+      "to": "gallery_album_sporting_sort",
+      "type": "routes"
+    },
+    {
+      "from": "frontend_gallery_channel",
+      "to": "gallery_album_globetrotter",
+      "type": "routes"
+    },
+    {
+      "from": "frontend_gallery_channel",
+      "to": "gallery_album_auteur_monsieur",
+      "type": "routes"
+    },
+    {
+      "from": "frontend_gallery_channel",
+      "to": "gallery_album_news_junket",
+      "type": "routes"
+    },
+    {
+      "from": "gallery_album_auteur_monsieur",
+      "to": "backend_gallery_api",
+      "type": "fetches"
+    },
+    {
+      "from": "frontend_socket_client_adapter",
+      "to": "frontend_game_channel",
+      "type": "supports"
+    },
+    {
+      "from": "backend_validate_input_middleware",
+      "to": "backend_game_api",
+      "type": "shared-middleware"
+    }
   ],
-  "notes": ["Added in-memory scoreboard with submit and list endpoints.", "Added animated gallery home with four themed albums."]
+  "notes": [
+    "Added in-memory scoreboard with submit and list endpoints.",
+    "Added animated gallery home with four themed albums.",
+    "Refactored validateInput middleware for clearer field-level validation and added unit tests.",
+    "Added internal frontend socket client adapter and fixed Gallery/ThreeGame compile blockers."
+  ]
 }
