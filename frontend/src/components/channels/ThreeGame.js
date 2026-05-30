@@ -38,6 +38,6 @@ export default function ThreeGame() {
         Plug in real 3D game by initializing <b>three.js</b> on this canvas.<br />
         See comments in <b>ThreeGame.js</b>
       </div>
-    </section>Soviet game, 
+    </section>
   );
 }
