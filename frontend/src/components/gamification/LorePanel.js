@@ -10,7 +10,7 @@ function buildLoreLookup(data) {
 }
 
 export default function LorePanel({ visible, onClose }) {
-  const { unlockedLore } = useContext(SharedStateContext);
+  const { unlockedLoreIds } = useContext(SharedStateContext);
   const loreLookup = useMemo(() => buildLoreLookup(loreData), []);
 
   if (!visible) return null;
@@ -50,8 +50,8 @@ export default function LorePanel({ visible, onClose }) {
       </button>
       <h3 style={{ marginTop: 0 }}>Unlocked Lore</h3>
       <ul style={{ paddingLeft: 0, listStyle: 'none' }}>
-        {unlockedLore && unlockedLore.length > 0 ? (
-          unlockedLore.map((id) => {
+        {unlockedLoreIds && unlockedLoreIds.length > 0 ? (
+          unlockedLoreIds.map((id) => {
             const loreItem = loreLookup[id];
             return (
               <li

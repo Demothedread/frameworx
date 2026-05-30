@@ -1,7 +1,7 @@
 // LiveVideo.js - Audience Voting System Integration
 
 import React, { useEffect, useState, useRef } from 'react';
-import { io } from '../../utils/socketClient';
+import { io } from 'socket.io-client';
 
 function getVoterId() {
   // Simple random voter ID for demo; replace with user auth/session in production

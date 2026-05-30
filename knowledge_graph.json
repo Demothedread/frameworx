@@ -82,15 +82,6 @@
         "backend/tests/validateInput.test.js"
       ],
       "desc": "Reusable request body validator with whitespace-aware required checks and max length validation."
-    },
-    {
-      "id": "frontend_socket_client_adapter",
-      "type": "module",
-      "files": [
-        "frontend/src/utils/socketClient.js",
-        "frontend/src/components/channels/LiveVideo.js"
-      ],
-      "desc": "Socket.IO-like browser adapter for voting channel when external socket.io-client package is unavailable."
     }
   ],
   "features": [
@@ -113,10 +104,6 @@
     {
       "id": "validation-whitespace-required",
       "desc": "Required string fields are treated as missing when only whitespace is provided."
-    },
-    {
-      "id": "livevideo-build-safe-socket-adapter",
-      "desc": "LiveVideo channel compiles without socket.io-client by using an internal socket adapter."
     }
   ],
   "relations": [
@@ -164,22 +151,11 @@
       "from": "gallery_album_auteur_monsieur",
       "to": "backend_gallery_api",
       "type": "fetches"
-    },
-    {
-      "from": "frontend_socket_client_adapter",
-      "to": "frontend_game_channel",
-      "type": "supports"
-    },
-    {
-      "from": "backend_validate_input_middleware",
-      "to": "backend_game_api",
-      "type": "shared-middleware"
     }
   ],
   "notes": [
     "Added in-memory scoreboard with submit and list endpoints.",
     "Added animated gallery home with four themed albums.",
-    "Refactored validateInput middleware for clearer field-level validation and added unit tests.",
-    "Added internal frontend socket client adapter and fixed Gallery/ThreeGame compile blockers."
+    "Refactored validateInput middleware for clearer field-level validation and added unit tests."
   ]
 }
