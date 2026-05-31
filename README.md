@@ -29,6 +29,18 @@ Open `http://localhost:3000` in your browser.
 
 ---
 
+## Screen System Architecture
+
+Each screen is now plug-and-play and self-contained:
+- `frontend/src/utils/screenRegistry.js` is the centralized index for screen modules.
+- `frontend/src/content/screenContentRepository.js` is the shared content source used by every screen definition.
+- `ChannelContainer` only orchestrates transitions and rendering while pulling screens from the registry.
+
+To add a new screen:
+1. Create the screen component in `frontend/src/components/channels/`.
+2. Add its content object to `screenContentRepository`.
+3. Add one registry entry in `screenRegistry`.
+
 ## Add a Channel
 
 - **Frontend:**
