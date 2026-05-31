@@ -75,6 +75,20 @@
       "desc": "News Junket album layout"
     },
     {
+      "id": "screen_registry",
+      "type": "frontend-module",
+      "files": [
+        "frontend/src/utils/screenRegistry.js"
+      ],
+      "notes": "Central plug-and-play registry that maps screen components to shared content."
+    },
+    {
+      "id": "screen_content_repository",
+      "type": "frontend-module",
+      "files": [
+        "frontend/src/content/screenContentRepository.js"
+      ],
+      "notes": "Centralized repository for per-screen metadata and copy."
       "id": "backend_validate_input_middleware",
       "type": "module",
       "files": [
@@ -100,6 +114,10 @@
     {
       "id": "album-subroutes",
       "desc": "Distinct layouts per photo album"
+    },
+    {
+      "id": "plug-play-screens",
+      "desc": "Screen modules are registered from a single shared registry and consume centralized content."
     },
     {
       "id": "validation-whitespace-required",
@@ -151,6 +169,16 @@
       "from": "gallery_album_auteur_monsieur",
       "to": "backend_gallery_api",
       "type": "fetches"
+    },
+    {
+      "from": "ChannelContainer",
+      "to": "screen_registry",
+      "type": "imports"
+    },
+    {
+      "from": "screen_registry",
+      "to": "screen_content_repository",
+      "type": "reads"
     }
   ],
   "notes": [

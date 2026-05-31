@@ -1,19 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import Admin from './channels/Admin';
-import Atelier from './channels/Atelier';
-import Blog from './channels/Blog';
-import Chatbot from './channels/Chatbot';
-import Gallery from './channels/Gallery';
-import Game from './channels/Game';
-import Landing from './channels/Landing';
-import LiveVideo from './channels/LiveVideo';
-import MindMap from './channels/MindMap';
-import Productivity from './channels/Productivity'; 
-import ThreeGame from './channels/ThreeGame';
-import UploadAndSort from './channels/UploadAndSort';
 
 import channelThemes from './channelThemes';
+import { screenRegistry } from '../utils/screenRegistry';
 import useParticleEngine from '../hooks/useParticleEngine';
 import GamificationHUD from './gamification/GamificationHUD';
 import FortuneWheel from './gamification/FortuneWheel';
@@ -24,20 +13,8 @@ import { getMicroAnimationEngine } from '../utils/MicroAnimationEngine';
 import { getLoadingStateEngine } from '../utils/LoadingStateEngine';
 import { getHapticFeedbackEngine } from '../utils/HapticFeedbackEngine';
 
-const CHANNELS = [
-  { key: 'admin', name: 'Admin', Component: Admin },
-  { key: 'atelier', name: 'Art Atelier', Component: Atelier },
-  { key: 'blog', name: 'Blog (CMS)', Component: Blog },
-  { key: 'chatbot', name: 'Chatbot', Component: Chatbot },
-  { key: 'gallery', name: 'Image Gallery', Component: Gallery },
-  { key: 'game', name: 'Game (Sample)', Component: Game },
-  { key: 'landing', name: 'Landing', Component: Landing },
-  { key: 'livevideo', name: 'Live Video', Component: LiveVideo },
-  { key: 'mindmap', name: 'Mind Map', Component: MindMap },
-  { key: 'productivity', name: 'Productivity', Component: Productivity },
-  { key: 'threegame', name: 'Three.js Game', Component: ThreeGame },
-  { key: 'uploadandsort', name: 'Upload & Sort', Component: UploadAndSort },
-];
+const CHANNELS = screenRegistry;
+
 
 // Enhanced Animation CSS with Belle Époque-Futurism styling
 const tvAnimStyles = `
@@ -783,7 +760,7 @@ export default function ChannelContainer() {
             transition: 'transform 0.3s ease'
           }}
         >
-          <Channel />
+          <Channel content={CHANNELS[activeIdx].content} />
         </div>
       </div>
 
