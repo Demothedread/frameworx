@@ -89,6 +89,13 @@
         "frontend/src/content/screenContentRepository.js"
       ],
       "notes": "Centralized repository for per-screen metadata and copy."
+      "id": "backend_validate_input_middleware",
+      "type": "module",
+      "files": [
+        "backend/middleware/validateInput.js",
+        "backend/tests/validateInput.test.js"
+      ],
+      "desc": "Reusable request body validator with whitespace-aware required checks and max length validation."
     }
   ],
   "features": [
@@ -111,6 +118,10 @@
     {
       "id": "plug-play-screens",
       "desc": "Screen modules are registered from a single shared registry and consume centralized content."
+    },
+    {
+      "id": "validation-whitespace-required",
+      "desc": "Required string fields are treated as missing when only whitespace is provided."
     }
   ],
   "relations": [
@@ -172,6 +183,7 @@
   ],
   "notes": [
     "Added in-memory scoreboard with submit and list endpoints.",
-    "Added animated gallery home with four themed albums."
+    "Added animated gallery home with four themed albums.",
+    "Refactored validateInput middleware for clearer field-level validation and added unit tests."
   ]
 }
