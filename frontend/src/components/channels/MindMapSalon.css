@@ -1,0 +1,258 @@
+.salon {
+  --accent: #9d7740;
+  --accent-soft: #efe4cf;
+  --border: rgba(50, 39, 27, 0.15);
+  --ink: #201c17;
+  --muted: #6c6359;
+  --panel: rgba(255, 253, 248, 0.92);
+  background: #f3eee5;
+  color: var(--ink);
+  min-height: 100vh;
+  padding: clamp(28px, 5vw, 72px);
+}
+
+.salon--neural-network {
+  --accent: #247d89;
+  --accent-soft: #d8eaed;
+  --border: rgba(15, 65, 73, 0.16);
+  --ink: #10292e;
+  --muted: #557278;
+  --panel: rgba(249, 253, 253, 0.92);
+  background: #e8f0f1;
+}
+
+.salon--dark {
+  --accent-soft: #2c261d;
+  --border: rgba(255, 255, 255, 0.12);
+  --ink: #f7f2e9;
+  --muted: #b9b0a5;
+  --panel: rgba(25, 22, 19, 0.92);
+  background: #11100e;
+}
+
+.salon--dark.salon--neural-network {
+  --accent-soft: #123036;
+  --ink: #ecfafb;
+  --muted: #9db8bd;
+  --panel: rgba(10, 24, 28, 0.94);
+  background: #071014;
+}
+
+.salon__header {
+  align-items: end;
+  display: flex;
+  gap: 32px;
+  justify-content: space-between;
+  margin: 0 auto 24px;
+  max-width: 1240px;
+}
+
+.salon__eyebrow {
+  color: var(--accent);
+  font: 700 11px/1.2 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.17em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.salon__header h1 {
+  font: 500 clamp(38px, 5vw, 66px)/0.98 Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.035em;
+  margin: 0;
+}
+
+.salon__description {
+  color: var(--muted);
+  font: 400 15px/1.6 ui-sans-serif, system-ui, sans-serif;
+  margin: 16px 0 0;
+  max-width: 620px;
+}
+
+.salon__mode-switch {
+  background: rgba(127, 127, 127, 0.09);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  padding: 4px;
+}
+
+.salon__mode-switch button {
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  color: var(--muted);
+  cursor: pointer;
+  font: 650 12px/1 ui-sans-serif, system-ui, sans-serif;
+  padding: 11px 16px;
+  transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.salon__mode-switch button.is-active {
+  background: var(--panel);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color: var(--ink);
+}
+
+.salon__summary {
+  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  display: flex;
+  font: 500 12px/1 ui-sans-serif, system-ui, sans-serif;
+  gap: 28px;
+  margin: 0 auto 20px;
+  max-width: 1240px;
+  padding: 13px 2px;
+}
+
+.salon__summary strong { color: var(--ink); font-weight: 700; }
+.salon__live-status { margin-left: auto; }
+.salon__live-status::before {
+  background: var(--accent);
+  border-radius: 50%;
+  content: '';
+  display: inline-block;
+  height: 6px;
+  margin: 0 8px 1px 0;
+  width: 6px;
+}
+
+.salon__workspace {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  margin: 0 auto;
+  max-width: 1240px;
+}
+
+.salon__graph-card,
+.salon__inspector {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 18px 48px rgba(26, 20, 14, 0.08);
+  overflow: hidden;
+}
+
+.salon__canvas {
+  display: block;
+  height: clamp(430px, 58vw, 620px);
+  width: 100%;
+}
+
+.salon__canvas.is-interactive { cursor: pointer; }
+
+.salon__legend {
+  align-items: center;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  display: flex;
+  font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+  gap: 20px;
+  padding: 15px 18px;
+}
+
+.salon__legend span { align-items: center; display: flex; gap: 7px; }
+.salon__legend i { background: var(--accent); border-radius: 50%; height: 7px; width: 7px; }
+.salon__legend .is-family { background: #b17859; }
+.salon__legend .is-friend { background: #57756b; }
+.salon__legend .is-work { background: #69758a; }
+.salon--neural-network .salon__legend .is-family { background: #b85778; }
+.salon--neural-network .salon__legend .is-friend { background: #397baf; }
+.salon--neural-network .salon__legend .is-work { background: #735ca3; }
+
+.salon__inspector { padding: 26px; }
+.salon__identity { align-items: center; display: flex; gap: 14px; }
+.salon__identity h2 {
+  font: 600 27px/1.1 Georgia, 'Times New Roman', serif;
+  margin: 0 0 4px;
+}
+.salon__identity p,
+.salon__bio { color: var(--muted); font: 500 12px/1.45 ui-sans-serif, system-ui, sans-serif; margin: 0; }
+.salon__monogram {
+  align-items: center;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  display: flex;
+  flex: 0 0 48px;
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  height: 48px;
+  justify-content: center;
+}
+.salon__bio { border-bottom: 1px solid var(--border); margin-top: 18px; padding-bottom: 20px; }
+
+.salon__metrics { display: grid; gap: 10px; margin: 20px 0; }
+.salon__metrics div { display: flex; justify-content: space-between; }
+.salon__metrics dt,
+.salon__metrics dd { font: 600 11px/1.4 ui-sans-serif, system-ui, sans-serif; margin: 0; }
+.salon__metrics dt { color: var(--muted); }
+.salon__metrics dd { color: var(--ink); }
+
+.salon__topics { background: rgba(127, 127, 127, 0.07); border-radius: 10px; padding: 16px; }
+.salon__topics h3,
+.salon__directory h3 {
+  font: 700 10px/1.2 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+.salon__topics ul { list-style: none; margin: 0; padding: 0; }
+.salon__topics li {
+  color: var(--muted);
+  font: 500 11px/1.5 ui-sans-serif, system-ui, sans-serif;
+  padding: 4px 0 4px 14px;
+  position: relative;
+}
+.salon__topics li::before { color: var(--accent); content: '—'; left: 0; position: absolute; }
+
+.salon__directory { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; }
+.salon__directory > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.salon__directory button {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  font: 600 10px/1 ui-sans-serif, system-ui, sans-serif;
+  gap: 6px;
+  padding: 6px 8px;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+.salon__directory button span { color: var(--accent); font-size: 8px; }
+.salon__directory button:hover,
+.salon__directory button.is-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.salon button:focus-visible,
+.salon__canvas:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+@media (max-width: 860px) {
+  .salon { padding: 28px 18px; }
+  .salon__header { align-items: start; flex-direction: column; }
+  .salon__workspace { grid-template-columns: 1fr; }
+  .salon__canvas { height: 480px; }
+}
+
+@media (max-width: 520px) {
+  .salon__header h1 { font-size: 40px; }
+  .salon__mode-switch { width: 100%; }
+  .salon__mode-switch button { flex: 1; }
+  .salon__summary { gap: 14px; }
+  .salon__live-status { display: none; }
+  .salon__canvas { height: 390px; }
+  .salon__legend { justify-content: space-between; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .salon *, .salon *::before, .salon *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
