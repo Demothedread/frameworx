@@ -104,10 +104,16 @@ export default function MindMapSalon({ theme = 'light', particleEngine }) {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    return renderedNodesRef.current
-      .map((node) => ({ ...node, distance: Math.hypot(node.x - x, node.y - y) }))
-      .filter((node) => node.distance <= node.hitRadius)
-      .sort((left, right) => left.distance - right.distance)[0];
+    let best = null;
+    let bestDistance = Infinity;
+    for (const node of renderedNodesRef.current) {
+      const distance = Math.hypot(node.x - x, node.y - y);
+      if (distance <= node.hitRadius && distance < bestDistance) {
+        best = node;
+        bestDistance = distance;
+      }
+    }
+    return best;
   };
 
   const selectGuest = (guestId, event) => {
