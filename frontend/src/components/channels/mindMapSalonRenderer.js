@@ -120,7 +120,21 @@ function drawNode(context, node, palette, mode, emphasis) {
   const labelWidth = Math.max(72, context.measureText(node.id).width + 32);
   const labelY = node.y + radius + 13;
   context.beginPath();
-  context.roundRect(node.x - labelWidth / 2, labelY - 10, labelWidth, 22, 7);
+  if (typeof context.roundRect === 'function') {
+    context.roundRect(node.x - labelWidth / 2, labelY - 10, labelWidth, 22, 7);
+  } else {
+    const x = node.x - labelWidth / 2;
+    const y = labelY - 10;
+    const w = labelWidth;
+    const h = 22;
+    const r = 7;
+    context.moveTo(x + r, y);
+    context.arcTo(x + w, y, x + w, y + h, r);
+    context.arcTo(x + w, y + h, x, y + h, r);
+    context.arcTo(x, y + h, x, y, r);
+    context.arcTo(x, y, x + w, y, r);
+    context.closePath();
+  }
   context.fillStyle = `${palette.card}f2`;
   context.fill();
   context.fillStyle = palette.text;
