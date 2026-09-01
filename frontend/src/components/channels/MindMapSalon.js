@@ -167,6 +167,8 @@ export default function MindMapSalon({ theme = 'light', particleEngine }) {
             ref={canvasRef}
             className={hoveredId ? 'salon__canvas is-interactive' : 'salon__canvas'}
             aria-label="Interactive relationship graph. Select a person from the directory for full details."
+            tabIndex={0}
+            role="application"
             onClick={(event) => {
               const node = findNodeAtPoint(event);
               if (node) selectGuest(node.id, event);
@@ -176,7 +178,14 @@ export default function MindMapSalon({ theme = 'light', particleEngine }) {
               const node = findNodeAtPoint(event);
               setHoveredId((currentId) => currentId === node?.id ? currentId : node?.id || null);
             }}
-            role="img"
+            onKeyDown={(event) => {
+              if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+              event.preventDefault();
+              const index = guests.findIndex((guest) => guest.id === selectedGuest.id);
+              const direction = ['ArrowRight', 'ArrowDown'].includes(event.key) ? 1 : -1;
+              const next = guests[(index + direction + guests.length) % guests.length];
+              if (next) selectGuest(next.id);
+            }}
           />
           <div className="salon__legend" aria-label="Relationship legend">
             <span><i className="is-family" />Family</span>
